@@ -1,0 +1,25 @@
+{
+  "name": "gridsome-source-shopware6",
+  "description": "Shopware 6 source plugin for Gridsome",
+  "version": "0.0.1",
+  "main": "index.js",
+  "engines": {
+    "node": ">=10.x"
+  },
+  "repository": "https://github.com/MarcoFaul/gridsome-source-shopware6.git",
+  "author": "Marco Faul",
+  "license": "MIT",
+  "keywords": [
+    "gridsome",
+    "gridsome-plugin",
+    "gridsome-source",
+    "shopware",
+    "shopware6"
+  ],
+  "scripts": {
+
+  },
+  "dependencies": {
+
+  }
+}
