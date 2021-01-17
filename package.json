@@ -2,7 +2,7 @@
   "name": "gridsome-source-shopware6",
   "description": "Shopware 6 source plugin for Gridsome",
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "lib/index.js",
   "engines": {
     "node": ">=10.x"
   },
@@ -17,9 +17,17 @@
     "shopware6"
   ],
   "scripts": {
-
+    "develop": "rollup -c --watch",
+    "build": "rm -rf lib && rollup -c"
   },
   "dependencies": {
-
+    "axios": "^0.21.1"
+  },
+  "peerDependencies": {
+    "gridsome": "^0.7.0"
+  },
+  "devDependencies": {
+    "eslint-config-travisreynolds-node": "^1.2.0",
+    "rollup": "^2.36.2"
   }
 }

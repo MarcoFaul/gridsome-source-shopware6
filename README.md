@@ -1,5 +1,7 @@
 # gridsome-source-shopware6
 
+!!! WORK IN PROGRESS !!!
+
 > Shopware 6 source plugin for Gridsome
 
 This plugin supports the Store API's.
