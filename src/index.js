@@ -1,23 +1,29 @@
 const pluginName = require("./../package.json").name;
-import { createClient, get} from './client';
+import {createClient} from './client';
+
+const {camelCase} = require('lodash');
 
 
 class ShopwareSource {
-    static defaultOptions () {
+    static defaultOptions() {
         return {
             debug: false,
             storeUrl: '',
             apiAccessToken: '',
-            types: [],
+            types: ['product', 'currency', 'shipping-method', 'category'],
             apiVersion: 'v3',
-            perPage: 100,
             timeout: 60000
         }
     }
 
-    constructor (api, options) {
+    constructor(api, options) {
         this.api = api;
         this.options = options;
+
+        if (!options.storeUrl ) throw new Error('Missing store url.')
+        if (!options.apiAccessToken) throw new Error('Missing API access token.')
+        if (!options.apiVersion) throw new Error('Missing API Version. E.g. v3')
+
 
         // merge options
         this.options = Object.assign(ShopwareSource.defaultOptions(), options);
@@ -26,21 +32,36 @@ class ShopwareSource {
     }
 
     async loadSource(actions) {
-        const client = createClient(this.options.apiAccessToken);
+        const client = createClient(this.options.apiAccessToken, this.options.timeout);
 
 
         for (const typeName of this.options.types) {
             let url = `${this.options.storeUrl}/store-api/${this.options.apiVersion}/${typeName.toLowerCase()}`;
 
-            const result = await client.get(url);
-            let data = result.data;
+            const result = await client.post(url);
 
-            this.collectionData(data.elements, actions, typeName);
+            if (result.statusText !== 'OK') {
+                this.log(result);
+                continue;
+            }
+
+            let data = [];
+
+            if (!result) {
+                this.log(result);
+                continue;
+            } else if (result.data && result.data.elements) {
+                data = result.data.elements;
+            } else {
+                data = result.data;
+            }
+
+            this.collectionData(data, actions, camelCase(typeName));
         }
     }
 
     collectionData(data, actions, typeName) {
-        const collection = actions.addCollection(typeName);
+        const collection = actions.addCollection(typeName.replace('-', ''));
 
         try {
             for (let item of data) {
